@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/use-auth';
-import { db } from '@/lib/firebase';
+import { useAuth } from '../../hooks/use-auth';
+import { db } from '../../lib/firebase';
 import { collection, query, where, getDocs } from 'firebase/firestore';
 
 // Define the type for availability slots
@@ -13,6 +13,9 @@ type AvailabilitySlot = {
   endTime: string;
 };
 
+/**
+ * Page for booking an appointment with an expert.
+ */
 export default function BookingPage() {
   const router = useRouter();
   const { user } = useAuth();
@@ -20,12 +23,16 @@ export default function BookingPage() {
 
   useEffect(() => {
     if (!user) {
+      // Redirect to the login page if the user is not signed in
       router.push('/auth');
     } else {
       fetchAvailability();
     }
   }, [user, router]); // Include router in the dependency array
 
+  /**
+   * Fetches the availability of the expert with the given ID and updates the component state.
+   */
   const fetchAvailability = async () => {
     const expertId = new URLSearchParams(window.location.search).get('expertId');
     const availabilityRef = collection(db, 'availability');

@@ -1,14 +1,19 @@
 "use client";
 
 import { useState } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { useToast } from '@/hooks/use-toast';
+import { Card } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { useToast } from '../../hooks/use-toast';
 import { useRouter } from 'next/navigation';
-import { useProtectedRoute } from '@/hooks/use-protected-route';
+import { useProtectedRoute } from '../../hooks/use-protected-route';
 import { Check, CreditCard, Calendar } from 'lucide-react';
 
+/**
+ * PaymentPage component
+ *
+ * This component renders the payment page for the Pro Plan.
+ */
 export default function PaymentPage() {
   useProtectedRoute(); // Protect this route
   
@@ -23,6 +28,11 @@ export default function PaymentPage() {
     cvv: ''
   });
 
+  /**
+   * Handles form submission
+   * 
+   * @param e - The form event
+   */
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);

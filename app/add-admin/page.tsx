@@ -2,12 +2,15 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { db } from '@/lib/firebase';
+import { db } from '../../lib/firebase';
 import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { Button } from '../../components/ui/button';
+import { Input } from '@../../components/ui/input';
 
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-
+/**
+ * The AddAdminPage component renders a form to add a new admin.
+ * @returns The rendered form.
+ */
 export default function AddAdminPage() {
   const router = useRouter();
   const [adminName, setAdminName] = useState('');
@@ -18,34 +21,11 @@ export default function AddAdminPage() {
   const [successMessage, setSuccessMessage] = useState('');
   const [errorMessage, setErrorMessage] = useState('');
 
-const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setSuccessMessage('');
-    setErrorMessage('');
-
-    if (!adminName || !adminCredentials || !adminPhoto || !adminEmail) {
-        setErrorMessage('All fields are required.');
-        setLoading(false);
-        return;
-    }
-
-    // Check for duplicate entries
-    const adminsRef = collection(db, 'admins');
-    const snapshot = await getDocs(adminsRef);
-    const existingAdmins = snapshot.docs.map((doc) => doc.data() as { email: string; credentials: string; });
-
-
-    const isDuplicate = existingAdmins.some(admin => 
-        admin.email === adminEmail || admin.credentials === adminCredentials
-    );
-
-    if (isDuplicate) {
-        setErrorMessage('An admin with the same email or credentials already exists.');
-        setLoading(false);
-        return;
-    }
-
+  /**
+   * Handles the form submission for adding a new admin.
+   * @param e - The form event triggered on submission.
+   */
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     setSuccessMessage('');
@@ -57,9 +37,24 @@ const handleSubmit = async (e: React.FormEvent) => {
       return;
     }
 
+    // Check for duplicate entries
+    const adminsRef = collection(db, 'admins');
+    const snapshot = await getDocs(adminsRef);
+    const existingAdmins = snapshot.docs.map((doc) => doc.data() as { email: string; credentials: string; });
+
+    const isDuplicate = existingAdmins.some(admin =>
+      admin.email === adminEmail || admin.credentials === adminCredentials
+    );
+
+    if (isDuplicate) {
+      setErrorMessage('An admin with the same email or credentials already exists.');
+      setLoading(false);
+      return;
+    }
+
     try {
       const adminsRef = collection(db, 'admins');
-      await addDoc(adminsRef, { 
+      await addDoc(adminsRef, {
 
         name: adminName,
         credentials: adminCredentials,
@@ -75,6 +70,9 @@ const handleSubmit = async (e: React.FormEvent) => {
     }
   };
 
+  /**
+   * Handles the button click for uploading a new photo.
+   */
   const handleUploadClick = () => {
     const input = document.createElement('input');
     input.type = 'file';

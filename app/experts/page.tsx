@@ -1,13 +1,13 @@
 "use client";
 
 import { useEffect, useState } from 'react';
-import { db } from '@/lib/firebase';
+import { db } from '../../lib/firebase';
 import { collection, getDocs, deleteDoc, doc } from 'firebase/firestore';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image'; // Import Image component
-import { useAuth } from '@/hooks/use-auth'; // Import useAuth hook
+import { useAuth } from '../../hooks/use-auth'; // Import useAuth hook
 
 // Define the type for expert objects
 type Expert = {
@@ -17,6 +17,11 @@ type Expert = {
   photo: string;
 };
 
+/**
+ * ExpertsPage component
+ *
+ * This component renders a list of experts and allows the admin to select and delete experts.
+ */
 export default function ExpertsPage() {
   const [experts, setExperts] = useState<Expert[]>([]); // Use the defined type
   const [selectedExperts, setSelectedExperts] = useState<string[]>([]); // Track selected expert IDs
@@ -34,6 +39,9 @@ export default function ExpertsPage() {
     fetchExperts();
   }, []);
 
+  /**
+   * Handles the deletion of the selected experts.
+   */
   const handleDeleteExperts = async () => {
     if (selectedExperts.length === 0) {
       alert("Please select at least one expert to delete.");
@@ -93,7 +101,7 @@ export default function ExpertsPage() {
             </Card>
           ))}
         </div>
-        {user && user.role === 'developersunilb@gmail.com' && ( // Show delete button only for admin users
+        {user && user.role === 'admin' && ( // Show delete button only for admin users
           <Button onClick={handleDeleteExperts} className="mt-4" disabled={selectedExperts.length === 0}>
             Delete Selected Experts
           </Button>

@@ -1,25 +1,30 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/use-auth';
-import { useProtectedRoute } from '@/hooks/use-protected-route';
-import { getExpertAppointments, addAvailability, removeAvailability } from '@/lib/api';
+import { Card } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
+import { useToast } from '../../hooks/use-toast';
+import { useAuth } from '../../hooks/use-auth';
+import { useProtectedRoute } from '../../hooks/use-protected-route';
+import { getExpertAppointments, addAvailability, removeAvailability } from '../../lib/api';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
 import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { format } from 'date-fns';
 
+/**
+ * ExpertDashboardPage component
+ *
+ * This component renders the dashboard for experts to manage their availability and view their upcoming and past sessions.
+ */
 export default function ExpertDashboardPage() {
   // Protect this route and ensure only experts can access it
   useProtectedRoute(true);
-  
+
   const { user, profile } = useAuth();
   const { toast } = useToast();
-  
+
   const [loading, setLoading] = useState(true);
   const [appointments, setAppointments] = useState<any[]>([]);
   const [availabilitySlots, setAvailabilitySlots] = useState<any[]>([]);
@@ -28,7 +33,7 @@ export default function ExpertDashboardPage() {
   useEffect(() => {
     const fetchData = async () => {
       if (!user) return;
-      
+
       try {
         setLoading(true);
         const data = await getExpertAppointments(user.id);
@@ -52,19 +57,19 @@ export default function ExpertDashboardPage() {
 
   const handleDateSelect = async (selectInfo: any) => {
     if (!user) return;
-    
+
     try {
       setActionInProgress(true);
-      
+
       // Add new availability slot
       const startTime = new Date(selectInfo.startStr);
       const endTime = new Date(selectInfo.endStr);
-      
+
       const newSlot = await addAvailability(user.id, startTime, endTime);
-      
+
       // Update local state
       setAvailabilitySlots([...availabilitySlots, newSlot]);
-      
+
       toast({
         title: 'Availability Added',
         description: 'Your availability has been added successfully.',
@@ -84,16 +89,16 @@ export default function ExpertDashboardPage() {
   const handleEventClick = async (clickInfo: any) => {
     // Only allow removing availability slots that aren't booked
     const eventData = clickInfo.event.extendedProps;
-    
+
     if (eventData.type === 'availability' && !eventData.isBooked) {
       try {
         setActionInProgress(true);
-        
+
         await removeAvailability(eventData.id);
-        
+
         // Update local state
         setAvailabilitySlots(availabilitySlots.filter(slot => slot.id !== eventData.id));
-        
+
         toast({
           title: 'Availability Removed',
           description: 'Your availability has been removed successfully.',
@@ -114,7 +119,7 @@ export default function ExpertDashboardPage() {
   const upcomingAppointments = appointments.filter(
     appointment => appointment.status === 'scheduled'
   );
-  
+
   const pastAppointments = appointments.filter(
     appointment => appointment.status === 'completed'
   );
@@ -239,20 +244,4 @@ export default function ExpertDashboardPage() {
                     </div>
                     <div className="text-sm text-gray-600">
                       <p>Date: {format(new Date(appointment.availability.start_time), 'MMMM d, yyyy')}</p>
-                      <p>Time: {format(new Date(appointment.availability.start_time), 'h:mm a')} - {format(new Date(appointment.availability.end_time), 'h:mm a')}</p>
-                    </div>
-                    <div className="mt-4">
-                      <Button size="sm" variant="outline" className="w-full">
-                        Provide Feedback
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}
+                      <p>Time: {format(new Date(appointment.availability.start_time), 'h:mm a')} - {format(new Date

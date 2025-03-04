@@ -1,13 +1,13 @@
 "use client";
 
 import { useState, useEffect } from 'react';
-import { Card } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
+import { Card } from '../../components/ui/card';
+import { Button } from '../../components/ui/button';
 import { Calendar, Clock, Video } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
-import { useAuth } from '@/hooks/use-auth';
-import { useProtectedRoute } from '@/hooks/use-protected-route';
-import { getUserAppointments, cancelAppointment } from '@/lib/api';
+import { useToast } from '../../hooks/use-toast';
+import { useAuth } from '../../hooks/use-auth';
+import { useProtectedRoute } from '../../hooks/use-protected-route';
+import { getUserAppointments, cancelAppointment } from '../../lib/api';
 import { useRouter } from 'next/navigation';
 import FullCalendar from '@fullcalendar/react';
 import dayGridPlugin from '@fullcalendar/daygrid';
@@ -15,6 +15,9 @@ import timeGridPlugin from '@fullcalendar/timegrid';
 import interactionPlugin from '@fullcalendar/interaction';
 import { format } from 'date-fns';
 
+/**
+ * The main dashboard page for users.
+ */
 export default function DashboardPage() {
   useProtectedRoute();
   
@@ -25,24 +28,28 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [appointments, setAppointments] = useState<any[]>([]);
   const [actionInProgress, setActionInProgress] = useState<string | null>(null);
-
+  
   useEffect(() => {
+    /**
+     * Fetches the appointments for the current user and updates the component state.
+     * Displays a toast notification in case of an error.
+     */
     const fetchAppointments = async () => {
-      if (!user) return;
+      if (!user) return; // Exit if user is not authenticated
       
       try {
-        setLoading(true);
-        const data = await getUserAppointments(user.id);
-        setAppointments(data || []);
+        setLoading(true); // Set loading state to true while fetching data
+        const data = await getUserAppointments(user.id); // Fetch user appointments
+        setAppointments(data || []); // Update appointments state with fetched data
       } catch (error) {
-        console.error('Error fetching appointments:', error);
+        console.error('Error fetching appointments:', error); // Log error to console
         toast({
           title: 'Error',
-          description: 'Failed to load your appointments',
+          description: 'Failed to load your appointments', // Notify user of the error
           variant: 'destructive',
         });
       } finally {
-        setLoading(false);
+        setLoading(false); // Reset loading state after data fetch attempt
       }
     };
 
@@ -51,10 +58,18 @@ export default function DashboardPage() {
     }
   }, [user, toast]);
 
+  /**
+   * Handles rescheduling an appointment.
+   * @param {string} appointmentId The appointment ID to reschedule.
+   */
   const handleReschedule = (appointmentId: string) => {
     router.push(`/reschedule?appointment=${appointmentId}`);
   };
 
+  /**
+   * Handles cancelling an appointment.
+   * @param {string} appointmentId The appointment ID to cancel.
+   */
   const handleCancel = async (appointmentId: string) => {
     try {
       setActionInProgress(appointmentId);
@@ -255,15 +270,3 @@ export default function DashboardPage() {
                         onClick={() => router.push('/experts')}
                       >
                         Book New Session
-                      </Button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </Card>
-          </div>
-        )}
-      </div>
-    </div>
-  );
-}

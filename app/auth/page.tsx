@@ -12,45 +12,59 @@ import { Card } from 'components/ui/card';
 import { useRouter } from 'next/navigation';
 import { signInWithPopup } from 'firebase/auth';
 
+/**
+ * AuthPage component allows users to sign in or sign up using email/password or Google authentication.
+ */
 export default function AuthPage() {
+  // State variables to manage form inputs, loading state, and sign-up mode
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+
+  // Custom hooks for authentication, routing, and toast notifications
   const { signIn, signUp } = useAuth();
   const router = useRouter();
-  const { showToast } = useToast(); // Use showToast instead of toast
+  const { showToast } = useToast();
 
+  /**
+   * Handles form submission for email/password authentication.
+   * @param e - Form submission event
+   */
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
-    
+
     try {
       if (isSignUp) {
         await signUp(email, password);
-        showToast('Account created', 'Your account has been created successfully.'); // Use showToast
+        showToast('Account created', 'Your account has been created successfully.');
       } else {
         await signIn(email, password);
-        showToast('Welcome back', 'You have been signed in successfully.'); // Use showToast
+        showToast('Welcome back', 'You have been signed in successfully.');
       }
       router.push('/dashboard');
     } catch (error: any) {
       console.error('Authentication error:', error);
-      showToast('Authentication error', error.message || 'An error occurred during authentication.', 'destructive'); // Use showToast
+      showToast('Authentication error', error.message || 'An error occurred during authentication.', 'destructive');
     } finally {
       setLoading(false);
     }
   };
 
+  /**
+   * Handles Google sign-in using Firebase authentication.
+   * @param e - Button click event
+   */
   const handleGoogleSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
     setLoading(true);
     try {
       await signInWithPopup(auth, googleProvider);
-      showToast('Signed in with Google', 'You have been signed in successfully.'); // Use showToast
+      showToast('Signed in with Google', 'You have been signed in successfully.');
       router.push('/dashboard');
     } catch (error: any) {
       console.error('Google sign-in error:', error);
-      showToast('Google sign-in error', error.message || 'An error occurred during Google sign-in.', 'destructive'); // Use showToast
+      showToast('Google sign-in error', error.message || 'An error occurred during Google sign-in.', 'destructive');
     } finally {
       setLoading(false);
     }
@@ -66,7 +80,7 @@ export default function AuthPage() {
         </div>
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
           <div className="rounded-md shadow-sm space-y-4">
-            <Input 
+            <Input
               type="email"
               placeholder="Email address"
               value={email}
@@ -74,7 +88,7 @@ export default function AuthPage() {
               required
               disabled={loading}
             />
-            <Input 
+            <Input
               type="password"
               placeholder="Password"
               value={password}
@@ -92,7 +106,7 @@ export default function AuthPage() {
         </form>
 
         <div className="text-center">
-          <Button 
+          <Button
             variant="link"
             onClick={() => setIsSignUp(!isSignUp)}
             className="text-sm"
@@ -105,7 +119,7 @@ export default function AuthPage() {
         </div>
 
         <div className="text-center">
-          <Button 
+          <Button
             variant="outline"
             onClick={handleGoogleSignIn}
             className="w-full"

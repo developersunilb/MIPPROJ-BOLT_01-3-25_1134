@@ -2,10 +2,10 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { db } from '@/lib/firebase';
+import { db } from '../../lib/firebase';
 import { collection, getDocs } from 'firebase/firestore';
-import { useAuth } from '@/hooks/use-auth';
-import { Button } from '@/components/ui/button';
+import { useAuth } from '../../hooks/use-auth';
+import { Button } from '../../components/ui/button';
 import Image from 'next/image'; // Import Image from next/image
 
 type Admin = {
@@ -16,6 +16,10 @@ type Admin = {
   email: string;
 };
 
+/**
+ * AdminListPage component displays a list of admins fetched from the database.
+ * It verifies if the current user is an admin before fetching the data.
+ */
 export default function AdminListPage() {
   const { user } = useAuth();
   const router = useRouter();
@@ -23,6 +27,10 @@ export default function AdminListPage() {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    /**
+     * Fetches the list of admins from Firestore and updates the state.
+     * Redirects the user if they are not an admin.
+     */
     const fetchAdmins = async () => {
       const adminsRef = collection(db, 'admins');
       const snapshot = await getDocs(adminsRef);
@@ -31,18 +39,20 @@ export default function AdminListPage() {
       setLoading(false);
     };
 
+    // Check if the user is an admin and fetch admins, otherwise redirect
     if (user && user.email === 'developersunilb@gmail.com') {
-
       fetchAdmins();
     } else {
       router.push('/'); // Redirect if not an admin
     }
   }, [user, router]);
 
+  // Display a loading message while fetching data
   if (loading) {
     return <div>Loading...</div>;
   }
 
+  // Render the list of admins
   return (
     <div className="bg-gray-100 py-12 px-6 sm:px-12 lg:px-24">
       <div className="max-w-4xl mx-auto bg-white shadow-lg rounded-lg p-6 sm:p-10">

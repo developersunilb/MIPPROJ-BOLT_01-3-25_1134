@@ -2,12 +2,12 @@
 
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { db } from '@/lib/firebase';
+import { db } from '../../lib/firebase';
 import { collection, addDoc, getDocs, deleteDoc, doc } from 'firebase/firestore';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
-import { useAuth } from '@/hooks/use-auth';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Textarea } from '../../components/ui/textarea';
+import { useAuth } from '../../hooks/use-auth';
 import TimeSlotModal from '../add-experts/TimeSlotModal'; // Import the TimeSlotModal component
 
 // Define the type for expert objects
@@ -18,21 +18,39 @@ type Expert = {
   photo: string;
 };
 
+/**
+ * The AdminPage component is responsible for rendering the admin dashboard.
+ * It displays a form for adding new experts and a list of existing experts.
+ * The user can select multiple experts to delete.
+ * 
+ * @remarks
+ * - Utilizes the "useAuth" hook to get the user's role and determine whether to show the delete button.
+ * - Utilizes the "useRouter" hook to navigate to the dashboard after adding a new expert.
+ * - Utilizes the "collection" and "addDoc" functions from Firestore to add new experts.
+ * - Utilizes the "doc" and "deleteDoc" functions from Firestore to delete selected experts.
+ * - Utilizes the "getDocs" function from Firestore to fetch the list of existing experts.
+ */
 export default function AdminPage() {
   const { user } = useAuth();
   const router = useRouter();
-  const [expertName, setExpertName] = useState('');
-  const [expertCredentials, setExpertCredentials] = useState('');
-  const [expertPhoto, setExpertPhoto] = useState('');
-  const [availability, setAvailability] = useState<string[]>([]); // Changed to an array to store multiple slots
-  const [loading, setLoading] = useState(false);
-  const [successMessage, setSuccessMessage] = useState('');
-  const [errorMessage, setErrorMessage] = useState('');
+  const [expertName, setExpertName] = useState(''); // Store the expert's name
+  const [expertCredentials, setExpertCredentials] = useState(''); // Store the expert's credentials
+  const [expertPhoto, setExpertPhoto] = useState(''); // Store the expert's photo URL
+  const [availability, setAvailability] = useState<string[]>([]); // Store the expert's available time slots
+  const [loading, setLoading] = useState(false); // Track the loading state of the form
+  const [successMessage, setSuccessMessage] = useState(''); // Track the success message
+  const [errorMessage, setErrorMessage] = useState(''); // Track the error message
   const [existingExperts, setExistingExperts] = useState<Expert[]>([]); // Track existing experts
-  const [isModalOpen, setIsModalOpen] = useState(false); // State to control modal visibility
-  const [selectedExperts, setSelectedExperts] = useState<string[]>([]); // Track selected expert IDs
+  const [isModalOpen, setIsModalOpen] = useState(false); // Track the visibility of the TimeSlotModal component
+  const [selectedExperts, setSelectedExperts] = useState<string[]>([]); // Track the selected expert IDs
 
   useEffect(() => {
+    /**
+     * Fetches the list of existing experts from Firestore.
+     * 
+     * @remarks
+     * - Utilizes the "getDocs" function from Firestore.
+     */
     const fetchExperts = async () => {
       const expertsRef = collection(db, 'experts');
       const snapshot = await getDocs(expertsRef);
@@ -135,20 +153,20 @@ export default function AdminPage() {
   return (
     <div className="bg-white py-24 sm:py-32">
       <div className="mx-auto max-w-7xl px-6 lg:px-8">
-<h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
-  Admin Dashboard
-</h1>
-<div className="flex space-x-4 mt-4">
-  <Button onClick={() => router.push('/add-admin')} className="mt-4">
-    Add New Admins
-  </Button>
-  <Button onClick={() => router.push('/add-experts')} className="mt-4">
-    Add Expert
-  </Button>
-  <Button onClick={() => {/* Future Google Analytics functionality */}} className="mt-4">
-    Google Analytics
-  </Button>
-</div>
+        <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-5xl">
+          Admin Dashboard
+        </h1>
+        <div className="flex space-x-4 mt-4">
+          <Button onClick={() => router.push('/add-admin')} className="mt-4">
+            Add New Admins
+          </Button>
+          <Button onClick={() => router.push('/add-experts')} className="mt-4">
+            Add Expert
+          </Button>
+          <Button onClick={() => {/* Future Google Analytics functionality */}} className="mt-4">
+            Google Analytics
+          </Button>
+        </div>
 
         <form className="mt-6 space-y-4" onSubmit={handleSubmit}>
           <Input
@@ -232,10 +250,10 @@ export default function AdminPage() {
           </div>
         )}
       </div>
-      <TimeSlotModal 
-        open={isModalOpen} 
-        onClose={() => setIsModalOpen(false)} 
-        onSelect={handleTimeSlotSelect} 
+      <TimeSlotModal
+        open={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        onSelect={handleTimeSlotSelect}
       />
     </div>
   );

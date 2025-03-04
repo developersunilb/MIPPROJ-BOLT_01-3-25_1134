@@ -1,15 +1,27 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
+import { Button } from "../../components/ui/button";
+import { Card } from "../../components/ui/card";
 import { CalendarDays, Users, Video, MessageSquare } from "lucide-react";
 import { useRouter } from 'next/navigation';
-import { useAuth } from "@/hooks/use-auth";
+import { useAuth } from "../../hooks/use-auth";
 
+/**
+ * Home component
+ *
+ * This component is the landing page that highlights the features of the service
+ * and provides options for users to book a session or learn more.
+ */
 export default function Home() {
   const router = useRouter();
   const { user } = useAuth();
 
+  /**
+   * Handles booking a session.
+   *
+   * If the user is not logged in, redirect to the authentication page.
+   * If the user is logged in, redirect to the experts page.
+   */
   const handleBookSession = () => {
     if (!user) {
       router.push('/auth');
@@ -100,23 +112,4 @@ export default function Home() {
               <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <span className="text-2xl font-bold text-black">2</span>
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-black">Attend Interview</h3>
-              <p className="text-gray-600">
-                Join the video call and participate in the mock interview
-              </p>
-            </div>
-            <div className="text-center">
-              <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-lg">
-                <span className="text-2xl font-bold text-black">3</span>
-              </div>
-              <h3 className="text-xl font-semibold mb-2 text-black">Get Feedback</h3>
-              <p className="text-gray-600">
-                Receive detailed feedback and improvement suggestions
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-  );
-}
+              <h3 className="text-xl font-semibold mb-2 text-black">Attend Interview

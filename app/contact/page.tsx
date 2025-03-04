@@ -1,22 +1,33 @@
 "use client";
 
 import { useState } from 'react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Textarea } from '@/components/ui/textarea';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { Textarea } from '../../components/ui/textarea';
 import { Phone, Mail, MessageSquare } from 'lucide-react';
-import { useToast } from '@/hooks/use-toast';
+//import { useToast } from '../../hooks/use-toast';
+import { useToast } from "../../components/ui/use-toast";
 
+/**
+ * ContactPage component renders a contact form and contact information
+ * for users to get in touch with the sales team.
+ */
 export default function ContactPage() {
   const { toast } = useToast();
+  // State to manage form data
   const [formData, setFormData] = useState({
     name: '',
     email: '',
     company: '',
     message: ''
   });
+  // State to manage form submission status
   const [submitting, setSubmitting] = useState(false);
 
+  /**
+   * Handles form submission.
+   * @param e - Form submission event
+   */
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
@@ -24,10 +35,13 @@ export default function ContactPage() {
     // Simulate form submission
     setTimeout(() => {
       console.log('Form submitted:', formData);
-      toast({
-        title: 'Message Sent',
-        description: 'Thank you for your message. Our team will get back to you shortly.',
-      });
+      if (toast) {
+        toast({
+          title: 'Message Sent',
+          description: 'Thank you for your message. Our team will get back to you shortly.',
+          variant: 'default'
+        });
+      }
       
       // Reset form
       setFormData({

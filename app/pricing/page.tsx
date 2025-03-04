@@ -1,14 +1,26 @@
 "use client";
 
-import { Button } from '@/components/ui/button'; // Corrected import for Button
+import { Button } from '../../components/ui/button'; // Corrected import for Button
 import { Check } from "lucide-react";
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/use-auth'; // Corrected import for useAuth
+import { useAuth } from '../../hooks/use-auth'; // Corrected import for useAuth
 
+/**
+ * The PricingPage component displays the different pricing plans for the service.
+ *
+ * It will either redirect to the payment page if the user is logged in, or to the
+ * auth page if the user is not logged in.
+ */
 export default function PricingPage() {
   const router = useRouter();
   const { user } = useAuth();
 
+  /**
+   * Handles the "Get started" button click event.
+   *
+   * If the user is not logged in, it will redirect to the auth page.
+   * If the user is logged in, it will redirect to the payment page.
+   */
   const handleGetStarted = () => {
     if (!user) {
       router.push('/auth');
