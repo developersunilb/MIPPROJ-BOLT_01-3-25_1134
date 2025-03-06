@@ -1,41 +1,12 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Calendar, User } from "lucide-react";
-import Link from "next/link";
-import { useRouter } from 'next/navigation';
-import { useAuth } from "@/hooks/use-auth";
+import { Button } from 'components/ui/button';
+import { Calendar, User } from 'lucide-react';
+import Link from 'next/link';
+import { useAuth } from 'hooks/use-auth';
 
-export function Navigation() {
-  const { user, profile, loading, logout } = useAuth();
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    try {
-      await logout();
-      router.push('/');
-    } catch (error) {
-      console.error('Error logging out:', error);
-    }
-  };
-
-  const handleBookSession = () => {
-    if (!user) {
-      router.push('/auth');
-    } else {
-      router.push('/experts');
-    }
-  };
-
-  const handleDashboardClick = () => {
-    if (!user) {
-      router.push('/auth');
-    } else if (profile?.role === 'expert') {
-      router.push('/dashboard/expert');
-    } else {
-      router.push('/dashboard');
-    }
-  };
+export function Navigation() { 
+  const { user, logout } = useAuth();
 
   return (
     <nav className="border-b">
@@ -49,30 +20,24 @@ export function Navigation() {
           </div>
           
           <div className="hidden md:flex items-center space-x-4">
-            <Link href="/about" className="text-gray-150 hover:text-gray-500">
+            <Link href="/about" className="text-gray-200 hover:text-gray-500">
               About
             </Link>
-            <Link href="/pricing" className="text-gray-150 hover:text-gray-500">
+            <Link href="/pricing" className="text-gray-200 hover:text-gray-500">
               Pricing
             </Link>
-            <Link href="/experts" className="text-gray-150 hover:text-gray-500">
+            <Link href="/experts" className="text-gray-200 hover:text-gray-500">
               Our Experts
             </Link>
-            <Link href="/learn-more" className="text-gray-150 hover:text-gray-500">
-              Learn More
-            </Link>
-            {user && user.email === 'developersunilb@gmail.com' ? (
+            {user ? (
               <>
-                <Link href="/admin" className="text-gray-150 hover:text-gray-500">
+              <Link href="/admin" className="text-gray-200 hover:text-gray-500">
                   Admin
                 </Link>
-                <Button 
-                  onClick={handleDashboardClick}
-                  className="text-gray-600 hover:text-gray-900"
-                >
+                <Link href="/dashboard" className="text-gray-200 hover:text-gray-500">
                   Dashboard
-                </Button>
-                <Button variant="outline" onClick={handleLogout}>
+                </Link>
+                <Button variant="outline" onClick={() => logout()}>
                   Sign Out
                 </Button>
               </>
@@ -84,9 +49,11 @@ export function Navigation() {
                     Sign In
                   </Button>
                 </Link>
-                <Button onClick={handleBookSession}>
-                  Get Started
-                </Button>
+                <Link href="/auth">
+                  <Button>
+                    Get Started
+                  </Button>
+                </Link>
               </>
             )}
           </div>

@@ -1,45 +1,41 @@
-// This is the updated AuthPage component with corrected imports
-
 "use client";
 
-import { useState } from 'react';
-import { useAuth } from 'hooks/use-auth'; 
+import { useState, useEffect } from 'react';
+import { useAuth } from 'hooks/use-auth';
 import { useToast } from 'hooks/use-toast';
-import { auth, googleProvider } from 'lib/firebase'; // Import Firebase auth and Google provider
+import { auth, googleProvider } from 'lib/firebase';
 import { Button } from 'components/ui/button';
 import { Input } from 'components/ui/input';
 import { Card } from 'components/ui/card';
 import { useRouter } from 'next/navigation';
 import { signInWithPopup } from 'firebase/auth';
 
-/**
- * AuthPage component allows users to sign in or sign up using email/password or Google authentication.
- */
 export default function AuthPage() {
-  // State variables to manage form inputs, loading state, and sign-up mode
   const [isSignUp, setIsSignUp] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
+  const [isClient, setIsClient] = useState(false);
 
-  // Custom hooks for authentication, routing, and toast notifications
   const { signIn, signUp } = useAuth();
   const router = useRouter();
   const { showToast } = useToast();
 
-  /**
-   * Handles form submission for email/password authentication.
-   * @param e - Form submission event
-   */
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setLoading(true);
 
     try {
       if (isSignUp) {
+        console.log('Signing up...');
         await signUp(email, password);
         showToast('Account created', 'Your account has been created successfully.');
       } else {
+        console.log('Signing in...');
         await signIn(email, password);
         showToast('Welcome back', 'You have been signed in successfully.');
       }
@@ -52,10 +48,6 @@ export default function AuthPage() {
     }
   };
 
-  /**
-   * Handles Google sign-in using Firebase authentication.
-   * @param e - Button click event
-   */
   const handleGoogleSignIn = async (e: React.MouseEvent<HTMLButtonElement>) => {
     setLoading(true);
     try {
@@ -69,6 +61,10 @@ export default function AuthPage() {
       setLoading(false);
     }
   };
+
+  if (!isClient) {
+    return null; // Render nothing on the server
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

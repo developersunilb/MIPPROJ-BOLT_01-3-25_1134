@@ -42,7 +42,7 @@ export default function ExpertsPage() {
   /**
    * Handles the deletion of the selected experts.
    */
-  const handleDeleteExperts = async () => {
+  const handleDeleteSelectedExperts = async () => {
     if (selectedExperts.length === 0) {
       alert("Please select at least one expert to delete.");
       return;
@@ -74,35 +74,39 @@ export default function ExpertsPage() {
         <div className="mt-6 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {experts.map(expert => (
             <Card key={expert.id} className="p-4">
-              {user && user.role === 'admin' && ( // Show checkboxes only for admin users
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={selectedExperts.includes(expert.id)}
-                    onChange={() => {
-                      if (selectedExperts.includes(expert.id)) {
-                        setSelectedExperts(selectedExperts.filter(id => id !== expert.id));
-                      } else {
-                        setSelectedExperts([...selectedExperts, expert.id]);
-                      }
-                    }}
+              <div>
+                {user && user.role === 'admin' && ( // Show checkboxes only for admin users
+                  <label className="flex items-center">
+                    <input
+                      type="checkbox"
+                      checked={selectedExperts.includes(expert.id)}
+                      onChange={() => {
+                        if (selectedExperts.includes(expert.id)) {
+                          setSelectedExperts(selectedExperts.filter(id => id !== expert.id));
+                        } else {
+                          setSelectedExperts([...selectedExperts, expert.id]);
+                        }
+                      }}
+                    />
+                    <span className="ml-2">{expert.name}</span>
+                  </label>
+                )}
+                <p>{expert.credentials}</p>
+                {expert.photo ? (
+                  <Image 
+                    src={expert.photo} 
+                    alt={expert.name} 
+                    width={128} 
                   />
-                  <span className="ml-2">{expert.name}</span>
-                </label>
-              )}
-              <p>{expert.credentials}</p>
-              <Image 
-                src={expert.photo} 
-                alt={expert.name} 
-                width={128} 
-                height={128} 
-                className="mt-2 object-cover" 
-              />
+                ) : (
+                  <p>No image available</p> // Fallback message if no photo is available
+                )}
+              </div>
             </Card>
           ))}
         </div>
         {user && user.role === 'admin' && ( // Show delete button only for admin users
-          <Button onClick={handleDeleteExperts} className="mt-4" disabled={selectedExperts.length === 0}>
+          <Button onClick={handleDeleteSelectedExperts} className="mt-4" disabled={selectedExperts.length === 0}>
             Delete Selected Experts
           </Button>
         )}

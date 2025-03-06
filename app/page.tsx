@@ -1,28 +1,31 @@
 "use client";
 
-import { Button } from "../../components/ui/button";
-import { Card } from "../../components/ui/card";
+import { Button } from 'components/ui/button'; // Updated import path
+import { Card } from 'components/ui/card'; // Updated import path
+
 import { CalendarDays, Users, Video, MessageSquare } from "lucide-react";
 import { useRouter } from 'next/navigation';
-import { useAuth } from "../../hooks/use-auth";
+import { useAuth } from 'hooks/use-auth';
 
 /**
- * Home component
- *
- * This component is the landing page that highlights the features of the service
- * and provides options for users to book a session or learn more.
+ * The home page of the application.
+ * 
+ * This page displays a hero section with a call to action to book a mock interview.
+ * It also displays a features section and a how it works section.
  */
 export default function Home() {
   const router = useRouter();
   const { user } = useAuth();
 
   /**
-   * Handles booking a session.
-   *
-   * If the user is not logged in, redirect to the authentication page.
-   * If the user is logged in, redirect to the experts page.
+   * Handles the book session button click.
+   * 
+   * If the user is not logged in, it redirects them to the login page.
+   * If the user is logged in, it redirects them to the experts page.
    */
-  const handleBookSession = () => {
+const handleBookSession = () => { // Redirects user based on authentication status
+
+
     if (!user) {
       router.push('/auth');
     } else {
@@ -36,23 +39,26 @@ export default function Home() {
       <section className="px-4 sm:px-6 lg:px-8 max-w-7xl mx-auto pt-20 pb-16">
         <div className="text-center">
           <h1 className="text-4xl font-bold tracking-tight text-gray-900 sm:text-6xl">
-            Ace Your Next Interview
+            Land Your Dream Job with Confidence
           </h1>
           <p className="mt-6 text-lg leading-8 text-gray-600 max-w-2xl mx-auto">
             Practice with industry experts in real mock interviews. Get personalized feedback, 
             improve your skills, and boost your confidence.
           </p>
           <div className="mt-10 flex items-center justify-center gap-x-6">
-            <Button size="lg" className="text-lg shadow-lg" onClick={handleBookSession}>
+            <Button size="lg" className="text-lg shadow-lg" onClick={handleBookSession} aria-label="Book a mock interview">
+
+
               Book a Mock Interview
             </Button>
-            <Button 
-              variant="outline" 
+            <Button // Learn more button
+
+
+              variant="outline"
               size="lg" 
               className="text-lg shadow-lg bg-black text-white"
               onClick={() => router.push('/learn-more')}
-            >
-              Learn More
+            >Learn More
             </Button>
           </div>
         </div>
@@ -112,4 +118,23 @@ export default function Home() {
               <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-lg">
                 <span className="text-2xl font-bold text-black">2</span>
               </div>
-              <h3 className="text-xl font-semibold mb-2 text-black">Attend Interview
+              <h3 className="text-xl font-semibold mb-2 text-black">Attend Interview</h3>
+              <p className="text-gray-600">
+                Join the video call and participate in the mock interview
+              </p>
+            </div>
+            <div className="text-center">
+              <div className="bg-white rounded-full w-16 h-16 flex items-center justify-center mx-auto mb-4 shadow-lg">
+                <span className="text-2xl font-bold text-black">3</span>
+              </div>
+              <h3 className="text-xl font-semibold mb-2 text-black">Get Feedback</h3>
+              <p className="text-gray-600">
+                Receive detailed feedback and improvement suggestions
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  );
+}

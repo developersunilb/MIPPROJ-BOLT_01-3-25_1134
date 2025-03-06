@@ -1,31 +1,96 @@
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../../lib/firebase"; // Change to named import
+"use client";
 
+import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { auth } from '../../lib/firebase';
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
+import { Button } from '../../components/ui/button';
+import { Input } from '../../components/ui/input';
+import { doc, getDoc } from 'firebase/firestore';
+import { db } from '../../lib/firebase';
 
 /**
- * Login component that handles user authentication.
+ * Login component allows users to sign in using email/password or Google authentication.
  */
 const Login = () => {
+  const router = useRouter();
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  const [isClient, setIsClient] = useState(false);
+
+  // Effect to set client-side rendering flag
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
   /**
-   * Handles the login process using provided email and password.
-   * @param email - The email address of the user.
-   * @param password - The password of the user.
+   * Handles email/password login.
+   * @param e - Form submission event
    */
-  const handleLogin = async (email: string, password: string) => {
+  const handleEmailLogin = async (e: React.FormEvent) => {
+    e.preventDefault();
     try {
-      // Attempt to sign in the user with email and password
       const userCredential = await signInWithEmailAndPassword(auth, email, password);
-      console.log("User logged in:", userCredential.user);
-    } catch (error) {
-      // Log any errors that occur during the login process
-      console.error("Error logging in:", error);
+      const user = userCredential.user;
+
+      // Fetch user role from Firestore
+      const userDoc = await getDoc(doc(db, 'users', user.uid));
+      const userRole = userDoc.data()?.role;
+
+      // Redirect based on user role
+      if (userRole === 'admin') {
+        router.push('/admin');
+      } else {
+        router.push('/dashboard');
+      }
+    } catch (err) {
+      setError('Failed to log in. Please check your credentials.');
     }
   };
 
+  /**
+   * Handles Google sign-in.
+   */
+  const handleGoogleLogin = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      router.push('/dashboard');
+    } catch (err) {
+      setError('Failed to log in with Google.');
+    }
+  };
+
+  // Return null during server-side rendering
+  if (!isClient) {
+    return null;
+  }
+
   return (
-    <div>
-      {/* Button to trigger the login process with test credentials */}
-      <button onClick={() => handleLogin("user@example.com", "password123")}>Login</button>
+    <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <form onSubmit={handleEmailLogin} className="bg-white p-6 rounded shadow-md">
+        <h2 className="text-2xl font-bold mb-4">Login</h2>
+        {error && <p className="text-red-500">{error}</p>}
+        <Input
+          type="email"
+          placeholder="Email"
+          value={email}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+          required
+        />
+        <Input
+          type="password"
+          placeholder="Password"
+          value={password}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPassword(e.target.value)}
+          required
+        />
+        <Button type="submit">Login</Button>
+        <Button type="button" onClick={handleGoogleLogin} variant="outline">
+          Login with Google
+        </Button>
+      </form>
     </div>
   );
 };

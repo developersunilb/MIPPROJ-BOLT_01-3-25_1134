@@ -51,7 +51,7 @@ export default function PricingPage() {
                 Perfect for getting started with mock interviews
               </p>
               <p className="mt-6 flex items-baseline gap-x-1">
-                <span className="text-4xl font-bold tracking-tight text-gray-900">$49</span>
+                <span className="text-4xl font-bold tracking-tight text-gray-900">₹49</span>
                 <span className="text-sm font-semibold leading-6 text-gray-600">/session</span>
               </p>
               <ul role="list" className="mt-8 space-y-3 text-sm leading-6 text-gray-600">
@@ -69,7 +69,7 @@ export default function PricingPage() {
                 </li>
               </ul>
             </div>
-            <Button className="mt-8" onClick={handleGetStarted}>Get started</Button>
+            <Button className="mt-8 shadow-lg" onClick={handleGetStarted}>Get started</Button>
           </div>
 
           {/* Pro Plan */}
@@ -80,7 +80,7 @@ export default function PricingPage() {
                 Comprehensive interview preparation package
               </p>
               <p className="mt-6 flex items-baseline gap-x-1">
-                <span className="text-4xl font-bold tracking-tight text-white">$89</span>
+                <span className="text-4xl font-bold tracking-tight text-white">₹99</span>
                 <span className="text-sm font-semibold leading-6 text-gray-300">/session</span>
               </p>
               <ul role="list" className="mt-8 space-y-3 text-sm leading-6 text-gray-300">
@@ -114,7 +114,7 @@ export default function PricingPage() {
           {/* Enterprise Plan */}
           <div className="flex flex-col justify-between rounded-3xl bg-white p-8 ring-1 ring-gray-200 xl:p-10">
             <div>
-              <h3 className="text-lg font-semibold leading-8 text-gray-900">Enterprise</h3>
+              <h3 className="text-lg font-semibold leading-8 text-gray-900">Advanced</h3>
               <p className="mt-4 text-sm leading-6 text-gray-600">
                 Custom solutions for organizations
               </p>
@@ -142,7 +142,7 @@ export default function PricingPage() {
             </div>
             <Button 
               variant="outline" 
-              className="mt-8"
+              className="mt-8 text-black"
               onClick={() => router.push('/contact')}
             >
               Contact sales

@@ -6,10 +6,11 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { db } from 'lib/firebase'; // Corrected import path
 import { collection, addDoc, getDocs, doc, deleteDoc } from 'firebase/firestore'; // Import necessary Firestore functions
-import { Button } from 'components/ui/button'; // Corrected import path
-import { Input } from 'components/ui/input'; // Corrected import path
-import { Textarea } from 'components/ui/textarea'; // Corrected import path
-import { useAuth } from 'hooks/use-auth'; // Corrected import path
+import { Button } from 'components/ui/button';
+import { Input } from 'components/ui/input';
+import { Textarea } from 'components/ui/textarea';
+import { useAuth } from 'hooks/use-auth';
+
 import TimeSlotModal from './TimeSlotModal'; // Import the TimeSlotModal component
 
 // Define the type for expert objects

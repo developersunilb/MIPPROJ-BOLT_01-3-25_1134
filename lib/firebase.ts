@@ -5,13 +5,13 @@ import { getStorage } from "firebase/storage"; // Import Storage
 
 // Your web app's Firebase configuration
 const firebaseConfig = {
-  apiKey: "AIzaSyATX-OMcNCWY_hjbrunoCra4KSUB0CEnps",
-  authDomain: "interview-prep-platform-c1f48.firebaseapp.com",
-  projectId: "interview-prep-platform-c1f48",
-  storageBucket: "interview-prep-platform-c1f48.appspot.com",
-  messagingSenderId: "710004831758",
-  appId: "1:710004831758:web:d82a86b5ba6856ae7f6e5f",
-  measurementId: "G-F89JTMNHS8"
+  apiKey: "AIzaSyCJLGskdHVVjmgthZFfeVp0XqBFP6ZnHow",
+  authDomain: "interview-prep-platform-ce2a1.firebaseapp.com",
+  projectId: "interview-prep-platform-ce2a1",
+  storageBucket: "interview-prep-platform-ce2a1.firebasestorage.app",
+  messagingSenderId: "199869598719",
+  appId: "1:199869598719:web:43975674c2a8175453f5ca",
+  measurementId: "G-EG7HP2S0CC"
 };
 
 // Initialize Firebase

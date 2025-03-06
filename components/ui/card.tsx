@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@/lib/utils";
+import { cn } from "../../lib/utils"; // Corrected import path
 import { HTMLAttributes, forwardRef } from "react";
 
 export interface CardProps extends HTMLAttributes<HTMLDivElement> {}

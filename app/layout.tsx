@@ -1,8 +1,10 @@
 import './globals.css';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
-import { ThemeProvider } from "../../components/theme-provider";
-import { Navigation } from "../../components/navigation";
+import { ThemeProvider } from "../components/theme-provider";
+import { Toaster } from '../components/ui/sonner'; // Import Toaster component
+
+import { Navigation } from "../components/navigation";
 
 const inter = Inter({ subsets: ['latin'] });
 
@@ -37,6 +39,8 @@ export default function RootLayout({
         >
           {/* Navigation component for the application's main navigation */}
           <Navigation />
+          {/* Render Toaster component for toast notifications */}
+          <Toaster />
           {/* Render child components passed to the layout */}
           {children}
         </ThemeProvider>
